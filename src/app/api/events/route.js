@@ -1,11 +1,12 @@
-import { NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabaseClient'
+import { NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabaseClient';
+
 
 function generateJoinCode(length = 6) {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-  let code = ''
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let code = '';
   for (let i = 0; i < length; i++) {
-    code += chars.charAt(Math.floor(Math.random() * chars.length))
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   return code
 }
@@ -13,21 +14,21 @@ function generateJoinCode(length = 6) {
 // create event
 export async function POST(request) {
     try {
-      const { eventName, startDate } = await request.json()
+      const { eventName, startDate } = await request.json();
 
       // unique code
-      let joinCode
-      let isUnique = false
+      let joinCode;
+      let isUnique = false;
       while (!isUnique) {
         joinCode = generateJoinCode()
         const { data: existingCode } = await supabase
           .from('events')
           .select('id')
           .eq('joincode', joinCode)
-          .single()
+          .single();
         
         if (!existingCode) {
-          isUnique = true
+          isUnique = true;
         }
       }
   
@@ -44,16 +45,16 @@ export async function POST(request) {
         // selects the just inserted row to return
         .select()
          // returns row object not in array
-        .single()
+        .single();
    
-      if (error) throw error // throw error
+      if (error) throw error; // throw error
   
-      return NextResponse.json(newEvent) // return res
+      return NextResponse.json(newEvent); // return res
 
     } catch (error) {
       return NextResponse.json(
         { error: error.message }, 
         { status: 500 }
-      )
+      );
     }
   }

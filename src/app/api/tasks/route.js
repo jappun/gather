@@ -1,10 +1,10 @@
-import { NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabaseClient'
+import { NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabaseClient';
 
 // create a task
 export async function POST(req) {
     try {
-        const { eventID, taskName } = await req.json()
+        const { eventID, taskName } = await req.json();
 
         const { data: newTask, error } = await supabase
         .from('tasks')
@@ -13,17 +13,17 @@ export async function POST(req) {
             name: taskName
         }])
         .select()
-        .single()
+        .single();
 
-        if (error) throw error
+        if (error) throw error;
         
-        return NextResponse.json(newTask)
+        return NextResponse.json(newTask);
 
     } catch (error) { 
         return NextResponse.json(
             { error: error.message }, 
             { status: 500 }
-          )
+          );
     }
 }
 

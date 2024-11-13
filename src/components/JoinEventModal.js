@@ -1,17 +1,17 @@
 "use client"
-import { Dialog, Transition } from '@headlessui/react'
-import { Fragment, useState } from 'react'
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment, useState } from 'react';
 
 
 const JoinEventModal = ({ isJoinEventModalOpen, setIsJoinEventModalOpen }) => {
 
 
   function closeModal() {
-    setIsJoinEventModalOpen(false)
+    setIsJoinEventModalOpen(false);
   }
 
   function openModal() {
-    setIsJoinEventModalOpen(true)
+    setIsJoinEventModalOpen(true);
   }
 
   return (
@@ -82,7 +82,7 @@ const JoinEventModal = ({ isJoinEventModalOpen, setIsJoinEventModalOpen }) => {
         </Dialog>
       </Transition>
     </>
-  )
+  );
 }
 
 
