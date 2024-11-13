@@ -3,6 +3,8 @@
 import StartPlanning from "@/components/StartPlanning";
 import JoinEventModal from "@/components/JoinEventModal";
 import { useState } from "react";
+import Link from 'next/link'
+
 
 
 export default function Home() {
@@ -10,7 +12,7 @@ export default function Home() {
 
   return (
     <div className="bg-background flex flex-col items-center justify-center min-h-screen p-12 gap-10 font-[family-name:var(--font-geist-sans)]">
-      <StartPlanning></StartPlanning>
+      <StartPlanning />
       <h1 className="text-secondary-two">
         Joining an existing event? Click <button className="underline hover:text-secondary" onClick={() => setIsJoinEventModalOpen(true) }>here</button> to enter your join code.
         {isJoinEventModalOpen &&  

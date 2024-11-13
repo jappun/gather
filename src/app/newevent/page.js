@@ -8,7 +8,7 @@ export default function NewEvent() {
     <div className="w-3/4 bg-secondary-two rounded-lg shadow-lg p-8">
 
       <form className="flex flex-col text-primary text-lg font-extrabold space-y-6">
-\
+
         <div className="space-y-2">
           <p>Title:</p>
           <input
