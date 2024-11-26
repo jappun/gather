@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabaseClient';
+import { supabase } from '@/libs/supabaseClient';
+import Router from 'next/navigation';
+
 
 
 function generateJoinCode(length = 6) {

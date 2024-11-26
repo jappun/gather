@@ -3,7 +3,6 @@
 import StartPlanning from "@/components/StartPlanning";
 import JoinEventModal from "@/components/JoinEventModal";
 import { useState } from "react";
-import Link from 'next/link'
 
 
 

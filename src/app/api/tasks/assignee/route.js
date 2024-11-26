@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabaseClient';
+import { supabase } from '@/libs/supabaseClient';
 
 export async function PATCH(req) {
     try {

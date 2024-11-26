@@ -1,6 +1,11 @@
 "use client"
+import CreateEvent from "@/components/CreateEvent";
+import { useState } from "react";
 
 export default function NewEvent() {
+  const [ eventName, setEventName ] = useState('');
+  const [ startDate, setStartDate ] = useState('');
+  const [ guestName, setGuestName ] = useState('');
     
     return (
 
@@ -13,8 +18,11 @@ export default function NewEvent() {
           <p>Title:</p>
           <input
             type="text"
-            id="event-name"
-            placeholder="My Event"
+            placeholder="Super Cool Fun Party"
+            value={eventName}
+            onChange={(e) => setEventName(e.target.value)}
+            required
+
             className="font-normal text-secondary-two shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
@@ -23,8 +31,10 @@ export default function NewEvent() {
           <p>Host Name:</p>
           <input
             type="text"
-            id="host-name"
-            placeholder="My Name"
+            placeholder="Your Name"
+            value={guestName}
+            onChange={(e) => setGuestName(e.target.value)}
+            required
             className="font-normal text-secondary-two shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
@@ -33,18 +43,18 @@ export default function NewEvent() {
           <p>Date:</p>
           <input
             type="date"
-            id="event-date"
             placeholder="Event Date"
             onClick={(e) => e.target.showPicker()}
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            required
             className="font-normal  text-secondary-two shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
 
-        <button
-      type="submit"
-      className="w-1/6 inline-flex justify-center rounded-md border border-transparent bg-primary px-8 py-1 text-sm font-medium text-white hover:bg-primary-two">
-        Create
-    </button>
+        <CreateEvent eventName={eventName} startDate={startDate} guestName={guestName }/>
+
+
 
     </form>
 
