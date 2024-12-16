@@ -1,10 +1,14 @@
 import { useState} from "react";
+import { useRouter } from 'next/navigation';
+
 
 const CreateEvent = ({ eventName, guestName, startDate}) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [newEvent, setNewEvent] = useState(null);
     const [newGuest, setNewGuest] = useState(null);
+    const router = useRouter();
+
 
 
   const createEvent = async () => {
@@ -80,29 +84,38 @@ const createHost = async (eventID) => {
     }
 };
 
-// const openEventPage = () => {
+const openEventPage = (joincode) => {
+    router.push(`/event/${joincode}`)
+}
 
-// }
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    let eventResult = null;
 
-
-const handleSubmit = async () => {
-    try {
-        const eventResult = await createEvent();
-        if (eventResult) {
-            await createHost()
+    try {      
+        eventResult = await createEvent();
+        if (eventResult && eventResult.id) {
+            await createHost(eventResult.id);
+        } else {
+            throw new Error('Event error');
         }
     } catch (error) {
-        console.log('Failed to complete event creation process');
+        console.error('Error:', error);
+        setError(error.message || 'Unknown error');
     } finally {
         setLoading(false);
-        // openEventPage(); if newGuest and newEvent
+        if (eventResult.joincode) {
+            openEventPage(eventResult.joincode);
+        }
     }
-}
+};
 
     return (
         <button
         type="submit"
-        onClick={handleSubmit}
+        onClick={(e) => handleSubmit(e)}
         disabled={ !eventName || !startDate || !guestName}
         className="disabled:bg-gray-300 w-1/6 inline-flex justify-center rounded-md border border-transparent bg-primary px-8 py-1 text-sm font-medium text-white hover:bg-primary-two">
             {loading ? 'Creating...' : 'Create'}

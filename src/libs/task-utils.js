@@ -6,3 +6,7 @@ export async function updateTaskStatus(taskID) {
         body: JSON.stringify({taskID})
     });
 }
+
+export async function addNewTask(name, assignee) {
+    
+}

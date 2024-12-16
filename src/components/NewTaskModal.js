@@ -1,18 +1,30 @@
 "use client"
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
+import { useParams } from 'next/navigation'
+import { getAllGuests } from '@/libs/guest-utils';
 
+// notes
+// you can make joincode and guest updates a prop in the event page to be passed down
 
-const JoinEventModal = ({ isJoinEventModalOpen, setIsJoinEventModalOpen }) => {
+const NewTaskModal = ({ isNewTaskModalOpen, setIsNewTaskModalOpen }) => {
+    const params = useParams();
+    const joinCode = params.joinCode;
+    const [guests, setGuests] = useState(null);
 
+    useEffect(() => {
+      setGuests(getAllGuests(joinCode)); // get every guest obj { id: ..., name: ..., etc.}
 
+    }, []); // see if this works after adding a new guest or if we have to do it on every re-render
+  
   function closeModal() {
-    setIsJoinEventModalOpen(false);
+    setIsNewTaskModalOpen(false);
   }
 
   function openModal() {
-    setIsJoinEventModalOpen(true);
+    setIsNewTaskModalOpen(true);
   }
+
 
   return (
     <>
@@ -26,7 +38,7 @@ const JoinEventModal = ({ isJoinEventModalOpen, setIsJoinEventModalOpen }) => {
         </button>
       </div>
 
-      <Transition appear show={isJoinEventModalOpen} as={Fragment}>
+      <Transition appear show={isNewTaskModalOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <Transition.Child
             as={Fragment}
@@ -52,29 +64,24 @@ const JoinEventModal = ({ isJoinEventModalOpen, setIsJoinEventModalOpen }) => {
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-secondary-two p-6 text-left align-middle shadow-xl transition-all">
-                  {/* <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium leading-6 text-background"
-                  >
-                    Join an event
-                  </Dialog.Title> */}
-                  <div className='m-2 space-y-4'>
+                  <div className='m-2 space-y-4 text-md'>
+                  <p className="text-background font-bold">What's the task?</p>
                     <form>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" id="joincode" type="text" placeholder="Join Code" />
-                        </form>
-                    <p className="text-background text-sm">Some copy explaining join codes blah blah blah.</p>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="Task" />
+                    </form>
+                    <p className="text-background font-bold ">Who's doing it? You can choose this later.</p>
+                    <form>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="Assignee (Optional)" />
+                    </form>
                     <button
                       type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-primary px-3 py-1 text-sm font-medium text-white hover:bg-primary-two"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-primary px-3 py-1 font-bold text-white hover:bg-primary-two"
                       onClick={closeModal}
                     >
-                      Join
+                      Add Task
                     </button>
                     </div>
 
-                  {/* <div className="mt-4">
-                    
-                  </div> */}
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -86,4 +93,4 @@ const JoinEventModal = ({ isJoinEventModalOpen, setIsJoinEventModalOpen }) => {
 }
 
 
-export default JoinEventModal;
+export default NewTaskModal;
