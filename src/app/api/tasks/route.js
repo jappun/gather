@@ -4,13 +4,14 @@ import { supabase } from '@/libs/supabaseClient';
 // create a task
 export async function POST(req) {
     try {
-        const { eventID, taskName } = await req.json();
+        const { eventID, taskName, assignee_id } = await req.json();
 
         const { data: newTask, error } = await supabase
         .from('tasks')
         .insert([{
             event_id: eventID,
-            name: taskName
+            name: taskName,
+            assignee: assignee_id
         }])
         .select()
         .single();

@@ -2,20 +2,43 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useEffect, useState } from 'react';
 import { useParams } from 'next/navigation'
+import { getEventByJoincode } from '@/libs/event-utils';
 import { getAllGuests } from '@/libs/guest-utils';
+import GuestSelection from './GuestSelection';
 
 // notes
 // you can make joincode and guest updates a prop in the event page to be passed down
 
 const NewTaskModal = ({ isNewTaskModalOpen, setIsNewTaskModalOpen }) => {
-    const params = useParams();
-    const joinCode = params.joinCode;
-    const [guests, setGuests] = useState(null);
+  const params = useParams();
+  const joinCode = params.joincode;
+  const [guests, setGuests] = useState([]);
+  const [assignee, setAssignee] = useState(null);
+  const [taskName, setTaskName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [eventID, setEventID] = useState(null);
 
-    useEffect(() => {
-      setGuests(getAllGuests(joinCode)); // get every guest obj { id: ..., name: ..., etc.}
+  useEffect(() => {
+    async function fetchGuests() {
+      const fetchedGuests = await getAllGuests(joinCode);
+      setGuests(fetchedGuests); // get every guest obj { id: ..., name: ..., etc.}
+    }
+    fetchGuests();
+  }, []); // see if this works after adding a new guest or if we have to do it on every re-render
 
-    }, []); // see if this works after adding a new guest or if we have to do it on every re-render
+  useEffect(() => {
+    async function fetchEvent() {
+      const fetchedEvent = await getEventByJoincode(joinCode);
+      setEventID(fetchedEvent.id);
+    }
+    fetchEvent();
+
+  }, [joinCode])
+
+  const handleGuestSelect = (guest) => {
+    setAssignee(guest); // get the selected guest and make them the assignee
+  }
+  
   
   function closeModal() {
     setIsNewTaskModalOpen(false);
@@ -24,6 +47,54 @@ const NewTaskModal = ({ isNewTaskModalOpen, setIsNewTaskModalOpen }) => {
   function openModal() {
     setIsNewTaskModalOpen(true);
   }
+
+  const handleSubmit = () => {
+    setLoading(true);
+
+    try {      
+        createTask();
+    } catch (error) {
+        console.error('Error:', error);
+        setError(error.message || 'Unknown error');
+    } finally {
+        setLoading(false);
+        closeModal();         
+    }
+  }
+
+  const createTask = async () => {
+    setLoading(true);
+
+    if (!eventID) {
+      setEventID(getEventByJoincode(joinCode));
+    } 
+
+    try {
+      const data = {
+        eventID,
+        taskName,
+        assignee_id: assignee
+      };
+
+      const response = await fetch('/api/tasks', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Error: ${response.statusText}`);
+    }
+
+    } catch (error) {
+        console.error('Error creating task:', error);
+        throw error;
+    }
+};
+
 
 
   return (
@@ -67,18 +138,21 @@ const NewTaskModal = ({ isNewTaskModalOpen, setIsNewTaskModalOpen }) => {
                   <div className='m-2 space-y-4 text-md'>
                   <p className="text-background font-bold">What's the task?</p>
                     <form>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="Task" />
-                    </form>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" 
+                        type="text" placeholder="Throw the best party ever" 
+                        onChange={(e) => setTaskName(e.target.value)}/>
+                    {/* </form> */}
                     <p className="text-background font-bold ">Who's doing it? You can choose this later.</p>
-                    <form>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="Assignee (Optional)" />
+                    {/* <form> */}
+                        {/* <input class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="Assignee (Optional)" /> */}
+                        <GuestSelection guests={guests} callback={handleGuestSelect}/>
                     </form>
                     <button
                       type="button"
                       className="inline-flex justify-center rounded-md border border-transparent bg-primary px-3 py-1 font-bold text-white hover:bg-primary-two"
-                      onClick={closeModal}
+                      onClick={handleSubmit}
                     >
-                      Add Task
+                      Add
                     </button>
                     </div>
 
