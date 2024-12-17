@@ -4,49 +4,51 @@ import { notFound } from 'next/navigation';
 import EventHeader from '@/components/EventHeader';
 import TaskList from '@/components/TaskList';
 import { useEffect, useState } from 'react';
-
+import { getEventByJoincode } from '@/libs/event-utils';
+import { getTasks } from '@/libs/task-utils';
+import { getGuests } from '@/libs/guest-utils';
 
 export default function Event({ params }) {
-    const [ event, setEvent] = useState(null);
+    const [ event, setEvent] = useState();
     const [ guests, setGuests ] = useState([]);
     const [ tasks, setTasks ] = useState([]);
+
     const [ loading, setLoading ] = useState(true);
     const [error, setError] = useState(false);
     const joincode = params.joincode;
 
     useEffect( () => {
-      const fetchEventData = async() => {
-        const { data: event, eventError } = await supabase.from("events").select("*").eq("joincode", joincode).single()
-        if (eventError || !event) {
-            console.error("Error fetching event.");
+      async function fetchData() {
+        try {
+          const fetchedEvent = await getEventByJoincode(joincode);
+          if (!fetchedEvent) {
             setError(true);
-            notFound();
-        } 
-          setEvent(event);
-        
-    
-        const { data: guests, guestsError } = await supabase.from("guests").select("*").eq("event_id", event.id);
-        if (guestsError) {
-            console.error("Error fetching guests.");
-            setError(true);
-        } else {
-          setGuests(guests);
-          const { data: tasks, tasksError } = await supabase.from("tasks").select("*").eq("event_id", event.id);
-          if (tasksError) {
-              console.error("Error fetching tasks.");
-              setError(true);
-            } else {
-            setTasks(tasks);
           }
+          const fetchedTasks = await getTasks(fetchedEvent.id);
+          const fetchedGuests = await getGuests(fetchedEvent.id);
+          const guestsArray = Array.isArray(fetchedGuests) ? fetchedGuests : [];
+          setEvent(fetchedEvent);
+          setTasks(fetchedTasks);
+          setGuests(guestsArray);
+          console.log(fetchedEvent); // logs a valid event
+        } catch (error) {
+          console.error("Error fetching event data:", error);
+          setError(true);
+        } finally {
+          setLoading(false);
         }
+       
+      }
 
-        setLoading(false);
+      setLoading(true);
+      fetchData();
 
-      };
+    }, [joincode])
 
-      fetchEventData();
-  
-    }, [])
+    useEffect( () => {
+      console.log("Guests type:", typeof guests);
+      console.log("updated guests", guests); // does not log a valid event
+    }, [guests])
 
 
     return (
@@ -64,7 +66,7 @@ export default function Event({ params }) {
             {/* <!-- Tasks Column (stacks first on mobile, 60% on desktop) --> */}
             <div class="w-full md:w-[60%] mb-6 md:mb-0">
               {/* <!-- Tasks content --> */}
-              <TaskList tasks={tasks} />
+              <TaskList tasks={tasks} eventID={event.id} guests={guests}/>
             </div>
         
             {/* <!-- Guests Column (stacks second on mobile, 40% on desktop) --> */}
@@ -86,3 +88,35 @@ export default function Event({ params }) {
 
     );
   }
+
+        // const fetchEventData = async() => {
+      //   const { data: event, eventError } = await supabase.from("events").select("*").eq("joincode", joincode).single()
+      //   if (eventError || !event) {
+      //       console.error("Error fetching event.");
+      //       setError(true);
+      //       notFound();
+      //   } 
+      //     setEvent(event);
+        
+    
+      //   const { data: guests, guestsError } = await supabase.from("guests").select("*").eq("event_id", event.id);
+      //   if (guestsError) {
+      //       console.error("Error fetching guests.");
+      //       setError(true);
+      //   } else {
+      //     setGuests(guests);
+      //     const { data: tasks, tasksError } = await supabase.from("tasks").select("*").eq("event_id", event.id);
+      //     if (tasksError) {
+      //         console.error("Error fetching tasks.");
+      //         setError(true);
+      //       } else {
+      //       setTasks(tasks);
+      //     }
+      //   }
+
+      //   setLoading(false);
+
+      // };
+
+      // fetchEventData();
+  

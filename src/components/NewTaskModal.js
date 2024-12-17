@@ -9,31 +9,13 @@ import GuestSelection from './GuestSelection';
 // notes
 // you can make joincode and guest updates a prop in the event page to be passed down
 
-const NewTaskModal = ({ isNewTaskModalOpen, setIsNewTaskModalOpen }) => {
+const NewTaskModal = ({ isNewTaskModalOpen, setIsNewTaskModalOpen, guests, eventID }) => {
   const params = useParams();
   const joinCode = params.joincode;
-  const [guests, setGuests] = useState([]);
   const [assignee, setAssignee] = useState(null);
   const [taskName, setTaskName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [eventID, setEventID] = useState(null);
 
-  useEffect(() => {
-    async function fetchGuests() {
-      const fetchedGuests = await getAllGuests(joinCode);
-      setGuests(fetchedGuests); // get every guest obj { id: ..., name: ..., etc.}
-    }
-    fetchGuests();
-  }, []); // see if this works after adding a new guest or if we have to do it on every re-render
-
-  useEffect(() => {
-    async function fetchEvent() {
-      const fetchedEvent = await getEventByJoincode(joinCode);
-      setEventID(fetchedEvent.id);
-    }
-    fetchEvent();
-
-  }, [joinCode])
 
   const handleGuestSelect = (guest) => {
     setAssignee(guest); // get the selected guest and make them the assignee
@@ -64,10 +46,6 @@ const NewTaskModal = ({ isNewTaskModalOpen, setIsNewTaskModalOpen }) => {
 
   const createTask = async () => {
     setLoading(true);
-
-    if (!eventID) {
-      setEventID(getEventByJoincode(joinCode));
-    } 
 
     try {
       const data = {

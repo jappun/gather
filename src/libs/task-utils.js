@@ -7,6 +7,17 @@ export async function updateTaskStatus(taskID) {
     });
 }
 
-export async function addNewTask(name, assignee) {
-    
-}
+// gets all the tasks for a given event
+export async function getTasks(e_id) {
+    const { data, error} = await supabase
+    .from("tasks")
+    .select("*")
+    .eq("event_id", e_id)
+
+    if (error) {
+        console.error("Error fetching tasks");
+        return null;
+    }
+
+    return data;
+};

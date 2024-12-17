@@ -3,7 +3,7 @@ import Task from "@/components/Task"
 import NewTaskModal from "./NewTaskModal";
 import { useState } from "react";
 
-const TaskList = ({ tasks }) => {
+const TaskList = ({ tasks, eventID, guests }) => {
   const [isNewTaskModalOpen, setIsNewTaskModalOpen] = useState(false);
 
   return (
@@ -28,6 +28,8 @@ const TaskList = ({ tasks }) => {
         <NewTaskModal
         isNewTaskModalOpen={isNewTaskModalOpen}
         setIsNewTaskModalOpen={setIsNewTaskModalOpen}
+        eventID={eventID}
+        guests={guests}
           />}
     </div>
   );

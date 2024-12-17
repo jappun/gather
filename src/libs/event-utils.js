@@ -9,7 +9,7 @@ export async function getEventByJoincode(joincode) {
 
     if (eventError) {
         console.error("Error fetching event");
-        return;
+        return null;
     }
 
     return eventData;

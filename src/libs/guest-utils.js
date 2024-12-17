@@ -14,34 +14,18 @@ export async function fetchGuestByID(guestID) {
     return data;
 
 }
-
-export async function getAllGuests(joinCode) {
-    const { data: eventData, error: eventError} = await supabase
-    .from("events")
-    .select("id")
-    .eq("joincode", joinCode)
-    .single();
-    
-    if (eventError) {
-        console.error("Error fetching event");
-        return [];
-    }
-    if (!eventData) {
-        console.error("No event found with this join code.");
-        return [];
-    }
-
+// gets all guests for an event, using event_id
+export async function getGuests(e_id) {
     const { data, error } = await supabase
     .from("guests")
     .select("*")
-    .eq("event_id", eventData.id);
+    .eq("event_id", e_id);
     
     if (error) {
         console.error('Error fetching guests:', error);
-        return [];
+        return null;
     }
     
-    console.log(data);
     return data || [];
 }
 
