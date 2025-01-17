@@ -15,15 +15,20 @@ const NewTaskModal = ({ isNewTaskModalOpen, setIsNewTaskModalOpen, guests, event
   const [assignee, setAssignee] = useState(null);
   const [taskName, setTaskName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
 
-  const handleGuestSelect = (guest) => {
-    setAssignee(guest); // get the selected guest and make them the assignee
+
+  const handleGuestSelect = (guestId) => {
+    setAssignee(guestId || null);
   }
   
   
   function closeModal() {
     setIsNewTaskModalOpen(false);
+    setTaskName("");
+    setAssignee("");
+    setError(null);
   }
 
   function openModal() {
@@ -32,6 +37,7 @@ const NewTaskModal = ({ isNewTaskModalOpen, setIsNewTaskModalOpen, guests, event
 
   const handleSubmit = () => {
     setLoading(true);
+    setError(null)
 
     try {      
         createTask();
@@ -46,33 +52,45 @@ const NewTaskModal = ({ isNewTaskModalOpen, setIsNewTaskModalOpen, guests, event
 
   const createTask = async () => {
     setLoading(true);
+    setError(null);
 
     try {
+      if (!taskName.trim()) {
+        throw new Error("Task name is required");
+      }
+
       const data = {
         eventID,
-        taskName,
-        assignee_id: assignee
+        taskName: taskName.trim(),
+        assignee_id: assignee, 
+        complete: false
       };
+
+      console.log("Sending task data:", data); // Debug log
 
       const response = await fetch('/api/tasks', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
-    });
+      });
 
-    if (!response.ok) {
+      if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || `Error: ${response.statusText}`);
-    }
+      }
 
+      const result = await response.json();
+      console.log("Task created successfully:", result); // Debug log
+      
+      closeModal();
     } catch (error) {
-        console.error('Error creating task:', error);
-        throw error;
+      console.error('Error creating task:', error);
+      setError(error.message || 'Failed to create task');
+      setLoading(false);
     }
-};
-
+  };
 
 
   return (
@@ -114,26 +132,30 @@ const NewTaskModal = ({ isNewTaskModalOpen, setIsNewTaskModalOpen, guests, event
               >
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-secondary-two p-6 text-left align-middle shadow-xl transition-all">
                   <div className='m-2 space-y-4 text-md'>
-                  <p className="text-background font-bold">What's the task?</p>
-                    <form>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" 
-                        type="text" placeholder="Throw the best party ever" 
-                        onChange={(e) => setTaskName(e.target.value)}/>
-                    {/* </form> */}
-                    <p className="text-background font-bold ">Who's doing it? You can choose this later.</p>
-                    {/* <form> */}
-                        {/* <input class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="Assignee (Optional)" /> */}
-                        <GuestSelection guests={guests} callback={handleGuestSelect}/>
+                    {error && <p className="text-red-500">{error}</p>}
+                    <p className="text-background font-bold">What's the task?</p>
+                    <form onSubmit={(e) => {
+                      e.preventDefault();
+                      handleSubmit()
+                      }}>
+                        <input 
+                        className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" 
+                        type="text" 
+                        placeholder="Throw the best party ever" 
+                        value={taskName}
+                        onChange={(e) => setTaskName(e.target.value)}
+                      />
+                      <p className="text-background font-bold">Who's doing it? You can choose this later.</p>
+                      <GuestSelection guests={guests} callback={handleGuestSelect}/>
+                      <button
+                        type="submit"
+                        disabled={loading}
+                        className="inline-flex justify-center rounded-md border border-transparent bg-primary px-3 py-1 font-bold text-white hover:bg-primary-two disabled:opacity-50"
+                      >
+                        {loading ? 'Adding...' : 'Add'}
+                      </button>
                     </form>
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-primary px-3 py-1 font-bold text-white hover:bg-primary-two"
-                      onClick={handleSubmit}
-                    >
-                      Add
-                    </button>
-                    </div>
-
+                  </div>
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -143,6 +165,5 @@ const NewTaskModal = ({ isNewTaskModalOpen, setIsNewTaskModalOpen, guests, event
     </>
   );
 }
-
 
 export default NewTaskModal;

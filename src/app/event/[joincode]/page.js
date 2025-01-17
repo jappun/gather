@@ -23,14 +23,40 @@ export default function Event({ params }) {
           const fetchedEvent = await getEventByJoincode(joincode);
           if (!fetchedEvent) {
             setError(true);
+            return;
           }
           const fetchedTasks = await getTasks(fetchedEvent.id);
           const fetchedGuests = await getGuests(fetchedEvent.id);
           const guestsArray = Array.isArray(fetchedGuests) ? fetchedGuests : [];
+
           setEvent(fetchedEvent);
           setTasks(fetchedTasks);
           setGuests(guestsArray);
-          console.log(fetchedEvent); // logs a valid event
+          // console.log(fetchedEvent); // logs a valid event
+          const tasksSubscription = supabase
+          .channel(`tasks-channel-${fetchedEvent.id}`)
+          .on(
+              'postgres_changes',
+              {
+                  event: '*', // Listen for all changes (INSERT, UPDATE, DELETE)
+                  schema: 'public',
+                  table: 'tasks',
+                  filter: `event_id=eq.${fetchedEvent.id}`
+              },
+              async (payload) => {
+                  // Refresh tasks when any change occurs
+                  const updatedTasks = await getTasks(fetchedEvent.id);
+                  setTasks(updatedTasks);
+              }
+          )
+          .subscribe();
+
+      return () => {
+          tasksSubscription.unsubscribe();
+      };
+
+
+
         } catch (error) {
           console.error("Error fetching event data:", error);
           setError(true);
@@ -44,11 +70,6 @@ export default function Event({ params }) {
       fetchData();
 
     }, [joincode])
-
-    useEffect( () => {
-      console.log("Guests type:", typeof guests);
-      console.log("updated guests", guests); // does not log a valid event
-    }, [guests])
 
 
     return (
