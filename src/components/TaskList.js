@@ -34,7 +34,7 @@ const TaskList = ({ tasks, eventID, guests }) => {
       <div className="space-y-3">
         {updatedTasks.length > 0 ? (
           updatedTasks.map((task) => (
-            <Task task={task}></Task>
+            <Task key={task.id} task={task}></Task>
           ))
         ) : (
           <p className="text-gray-600">No tasks available.</p>

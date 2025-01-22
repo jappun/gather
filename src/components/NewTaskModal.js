@@ -133,7 +133,7 @@ const NewTaskModal = ({ isNewTaskModalOpen, setIsNewTaskModalOpen, guests, event
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-secondary-two p-6 text-left align-middle shadow-xl transition-all">
                   <div className='m-2 space-y-4 text-md'>
                     {error && <p className="text-red-500">{error}</p>}
-                    <p className="text-background font-bold">What's the task?</p>
+                    <p className="text-background font-bold">What&apos;s the task?</p>
                     <form onSubmit={(e) => {
                       e.preventDefault();
                       handleSubmit()
@@ -145,7 +145,7 @@ const NewTaskModal = ({ isNewTaskModalOpen, setIsNewTaskModalOpen, guests, event
                         value={taskName}
                         onChange={(e) => setTaskName(e.target.value)}
                       />
-                      <p className="text-background font-bold">Who's doing it? You can choose this later.</p>
+                      <p className="text-background font-bold">Who&apos;s doing it? You can choose this later.</p>
                       <GuestSelection guests={guests} callback={handleGuestSelect}/>
                       <button
                         type="submit"
