@@ -9,7 +9,7 @@ import GuestSelection from './GuestSelection';
 // notes
 // you can make joincode and guest updates a prop in the event page to be passed down
 
-const NewTaskModal = ({ isNewTaskModalOpen, setIsNewTaskModalOpen, guests, eventID }) => {
+const NewTaskModal = ({ isNewTaskModalOpen, setIsNewTaskModalOpen, guests, eventID, onTaskAdded }) => {
   const params = useParams();
   const joinCode = params.joincode;
   const [assignee, setAssignee] = useState(null);
@@ -83,7 +83,7 @@ const NewTaskModal = ({ isNewTaskModalOpen, setIsNewTaskModalOpen, guests, event
 
       const result = await response.json();
       console.log("Task created successfully:", result); // Debug log
-      
+      onTaskAdded();
       closeModal();
     } catch (error) {
       console.error('Error creating task:', error);

@@ -32,28 +32,28 @@ export default function Event({ params }) {
           setEvent(fetchedEvent);
           setTasks(fetchedTasks);
           setGuests(guestsArray);
-          // console.log(fetchedEvent); // logs a valid event
-          const tasksSubscription = supabase
-          .channel(`tasks-channel-${fetchedEvent.id}`)
-          .on(
-              'postgres_changes',
-              {
-                  event: '*', // Listen for all changes (INSERT, UPDATE, DELETE)
-                  schema: 'public',
-                  table: 'tasks',
-                  filter: `event_id=eq.${fetchedEvent.id}`
-              },
-              async (payload) => {
-                  // Refresh tasks when any change occurs
-                  const updatedTasks = await getTasks(fetchedEvent.id);
-                  setTasks(updatedTasks);
-              }
-          )
-          .subscribe();
+      //     // console.log(fetchedEvent); // logs a valid event
+      //     const tasksSubscription = supabase
+      //     .channel(`tasks-channel-${fetchedEvent.id}`)
+      //     .on(
+      //         'postgres_changes',
+      //         {
+      //             event: '*', // Listen for all changes (INSERT, UPDATE, DELETE)
+      //             schema: 'public',
+      //             table: 'tasks',
+      //             filter: `event_id=eq.${fetchedEvent.id}`
+      //         },
+      //         async (payload) => {
+      //             // Refresh tasks when any change occurs
+      //             const updatedTasks = await getTasks(fetchedEvent.id);
+      //             setTasks(updatedTasks);
+      //         }
+      //     )
+      //     .subscribe();
 
-      return () => {
-          tasksSubscription.unsubscribe();
-      };
+      // return () => {
+      //     tasksSubscription.unsubscribe();
+      // };
 
 
 
