@@ -2,7 +2,6 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useEffect, useState } from 'react';
 import { useParams } from 'next/navigation'
-import { getEventByJoincode } from '@/libs/event-utils';
 import { getAllGuests } from '@/libs/guest-utils';
 import GuestSelection from './GuestSelection';
 
@@ -66,7 +65,7 @@ const NewTaskModal = ({ isNewTaskModalOpen, setIsNewTaskModalOpen, guests, event
         complete: false
       };
 
-      console.log("Sending task data:", data); // Debug log
+      // console.log("Sending task data:", data); 
 
       const response = await fetch('/api/tasks', {
         method: 'POST',
@@ -82,7 +81,7 @@ const NewTaskModal = ({ isNewTaskModalOpen, setIsNewTaskModalOpen, guests, event
       }
 
       const result = await response.json();
-      console.log("Task created successfully:", result); // Debug log
+      // console.log("Task created successfully:", result); 
       onTaskAdded();
       closeModal();
     } catch (error) {

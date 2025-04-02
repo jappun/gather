@@ -9,18 +9,18 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: "#FEF3C7", // Your original background
+        background: "#FEF3C7", 
         primary: {
-          DEFAULT: "#FF9E80", // Your original primary color
-          foreground: 'hsl(var(--primary-foreground))', // Kept shadcn's foreground
+          DEFAULT: "#FF9E80", 
+          foreground: 'hsl(var(--primary-foreground))', //  shadcn's foreground
         },
         'primary-two': '#FF6F61',
         secondary: {
-          DEFAULT: "#14B8A6", // Your original secondary color
-          foreground: 'hsl(var(--secondary-foreground))', // Kept shadcn's foreground
+          DEFAULT: "#14B8A6", 
+          foreground: 'hsl(var(--secondary-foreground))', //  shadcn's foreground
         },
         'secondary-two': '#115E59',
-        // Kept other shadcn color definitions
+        // other shadcn color definitions
         foreground: 'hsl(var(--foreground))',
         card: {
           DEFAULT: 'hsl(var(--card))',
@@ -53,7 +53,7 @@ module.exports = {
           '5': 'hsl(var(--chart-5))'
         }
       },
-      // Kept the border radius from shadcn
+      // the border radius from shadcn
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
@@ -75,18 +75,18 @@ module.exports = {
 	theme: {
 	  extend: {
 		colors: {
-		  background: "#FEF3C7", // Your original background
+		  background: "#FEF3C7", 
 		  primary: {
-			DEFAULT: "#FF9E80", // Your original primary color
-			foreground: 'hsl(var(--primary-foreground))', // Kept shadcn's foreground
+			DEFAULT: "#FF9E80", 
+			foreground: 'hsl(var(--primary-foreground))', //  shadcn's foreground
 		  },
 		  'primary-two': '#FF6F61',
 		  secondary: {
-			DEFAULT: "#14B8A6", // Your original secondary color
-			foreground: 'hsl(var(--secondary-foreground))', // Kept shadcn's foreground
+			DEFAULT: "#14B8A6", 
+			foreground: 'hsl(var(--secondary-foreground))', //  shadcn's foreground
 		  },
 		  'secondary-two': '#115E59',
-		  // Kept other shadcn color definitions
+		  // other shadcn color definitions
 		  foreground: 'hsl(var(--foreground))',
 		  card: {
 			DEFAULT: 'hsl(var(--card))',
@@ -119,7 +119,7 @@ module.exports = {
 			'5': 'hsl(var(--chart-5))'
 		  }
 		},
-		// Kept the border radius from shadcn
+		// the border radius from shadcn
 		borderRadius: {
 		  lg: 'var(--radius)',
 		  md: 'calc(var(--radius) - 2px)',
