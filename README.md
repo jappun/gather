@@ -37,5 +37,5 @@ This is expected! Your local copy won't have access to my Supabase project. You'
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 ```
-You'll also need to set up your tables correctly as the program expects. If you need help setting it up, feel free to shoot me a message on [LinkedIn](www.linkedin.com/in/jappun).
+You'll also need to set up your tables correctly as the program expects. If you want the database schema, email me at jpdhillon07@gmail.com
 
