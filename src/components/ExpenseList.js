@@ -76,7 +76,7 @@ const ExpenseList = ({ eventID, guests }) => {
         className="w-full text-xl mt-4 p-2 bg-primary text-white rounded-lg hover:bg-primary-two transition-colors"
         onClick={() => setIsNewExpenseModalOpen(true)}
       >
-        Add Expense
+        +
       </button>
       {isNewExpenseModalOpen && (
         <NewExpenseModal

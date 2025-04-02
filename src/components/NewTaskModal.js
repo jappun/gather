@@ -144,12 +144,12 @@ const NewTaskModal = ({ isNewTaskModalOpen, setIsNewTaskModalOpen, guests, event
                         value={taskName}
                         onChange={(e) => setTaskName(e.target.value)}
                       />
-                      <p className="text-background font-bold">Who&apos;s doing it? You can choose this later.</p>
+                      <p className="text-background font-bold">Who&apos;s doing it?</p>
                       <GuestSelection guests={guests} callback={handleGuestSelect}/>
                       <button
                         type="submit"
                         disabled={loading}
-                        className="inline-flex justify-center rounded-md border border-transparent bg-primary px-3 py-1 font-bold text-white hover:bg-primary-two disabled:opacity-50"
+                        className="mt-4 inline-flex justify-center rounded-md border border-transparent bg-primary px-3 py-1 font-bold text-white hover:bg-primary-two disabled:opacity-50"
                       >
                         {loading ? 'Adding...' : 'Add'}
                       </button>
